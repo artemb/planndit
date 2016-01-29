@@ -1,0 +1,12 @@
+<div class="container" ng-controller="AddressController as vm" >
+    <h1>Add addresses</h1>
+        <div>
+            <div ui-view>
+                <p>Type or copy and paste postcodes into the field below.</p>
+                <div class="form-group">
+                    <textarea class="form-control" id="address-search-field" placeholder="Postcodes" ng-model="vm.addresses" rows="6" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-default" ng-click="import()">Import</button>
+        </div>
+</div>

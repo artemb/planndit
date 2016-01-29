@@ -1,0 +1,59 @@
+<div class="container" ng-controller="OrderController as vm">
+    <div class="row">
+        <div class="col-md-12 toolbar">
+            Editing order
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class = "input-group-addon">Oder reference</span>
+                <input type="text" class="form-control" ng-model="order.reference"/>
+            </div>
+            <div class="input-group">
+                <span class = "input-group-addon">Address</span>
+                <input type="text" class="form-control" ng-model="order.location.address" ng-change="geocode(order.location.address)"/>
+                <span class = "input-group-addon">
+                    <span class="glyphicon glyphicon-refresh"  ng-show="loading"/>
+                    <span class="glyphicon glyphicon-ok" ng-show="order.location.is_valid && !loading"/>
+                    <span class="glyphicon glyphicon-remove" ng-show="!order.location.is_valid && !loading"/>
+                </span>
+            </div>
+            <div class="input-group">
+                <span class = "input-group-addon">Comments</span>
+                <input type="text" class="form-control" ng-model="order.commentary"/>
+            </div>
+            Additional information
+            <div class="input-group" ng-repeat="item in order.orderitem_set">
+                <div class="row" style="margin-bottom: 5px">
+                    <div class="col-md-6" style="padding-right: 2px">
+                        <input type="text" class="form-control" ng-model="item.key"/>
+                    </div>
+                    <div class="col-md-6" style="padding-left: 2px;">
+                        <input type="text" class="form-control" ng-model="item.value"/>
+                    </div>
+                </div>
+            </div>
+            <div role="group" class="btn-group" aria-label="...">
+                <button id="back" class="btn btn-default" ng-click="back()">
+                    <span class="glyphicon glyphicon-backward"></span>
+                    Back
+                </button>
+                <button id="back" class="btn btn-default" ng-click="update()" ng-disabled="loading">
+                    <span class="glyphicon glyphicon-save"></span>
+                    Save
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div ng-controller="MapController">
+                <leaflet id = "map" height="480px" width="100%" center="center" paths="paths" markers="markers" bounds="bounds"></leaflet>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-2">
+
+        </div>
+    </div>
+</div>

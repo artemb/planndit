@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>(A)Plann'd it</title>
+    <link rel="shortcut icon" href="http://maxoptra.com/wp-content/uploads/2013/10/maxoptra_text_img.png">
+
+    <script type="text/javascript" src='{% static 'jquery/dist/jquery.js' %}'></script>
+    <script type="text/javascript" src='{% static 'jquery-ui/jquery-ui.js' %}'></script>
+    <script type="text/javascript" src='{% static 'angular/angular.js' %}'></script>
+    <script type="text/javascript" src='{% static 'angular-ui-router/release/angular-ui-router.js' %}'></script>
+    <script type="text/javascript" src='{% static 'angular-bootstrap/ui-bootstrap.min.js' %}'></script>
+    <script type="text/javascript" src='{% static 'angular-bootstrap/ui-bootstrap-tpls.min.js' %}'></script>
+    <script type="text/javascript" src='{% static 'leaflet/dist/leaflet.js' %}'></script>
+    <script type="text/javascript" src='{% static 'angular-leaflet-directive/dist/angular-leaflet-directive.js' %}'></script>
+    <script type="text/javascript" src='{% static 'Leaflet.label/dist/leaflet.label.js' %}'></script>
+    <script src="https://rawgithub.com/angular-ui/ui-sortable/master/src/sortable.js"></script>
+
+    <script type="text/javascript" src='{% static 'plan/properties.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/application.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/register.controller.js' %}'></script>
+
+    <script type="text/javascript" src='{% static 'plan/route_list/route_list.controller.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/route_list/route_list.service.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/route/route.controller.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/route/route.service.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/order/order.service.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/address/address.controller.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/address/address.service.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/map/map.controller.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/order/order.controller.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/order/order.service.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/gis/gis.service.js' %}'></script>
+    <script type="text/javascript" src='{% static 'plan/vehicle/vehicle.service.js' %}'></script>
+
+    <link rel="stylesheet" type="text/css" href='{% static 'plan/style.css' %}'>
+    <link rel="stylesheet" type="text/css" href='{% static 'bootstrap/dist/css/bootstrap.css' %}'>
+    <link rel="stylesheet" type="text/css" href='{% static 'leaflet/dist/leaflet.css' %}'>
+    <link rel="stylesheet" type="text/css" href='{% static 'Leaflet.label/dist/leaflet.label.css' %}'>
+</head>
+<body ng-app="Planndit">
+    {% block header %}
+        <div id="container">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#fiver-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="/routes/">Plann'd it</a>
+                </div>
+                <div class="collapse navbar-collapse" id="fiver-navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li>
+{#						<? echo $this->Html->link("Create route", '/itinerary/#!/new-route'); ?>#}
+						</li>
+					</ul>
+					{% if view.request.user.is_authenticated  %}
+                        <p class="navbar-text navbar-right">Signed in as <strong id="logged-in-username">{{ view.request.user.username }}</strong>.
+                        <a href="{% url 'plan:logout' %}">Logout</a>
+                        </p>
+                    {% else %}
+                        <p class="navbar-text navbar-right">
+                            <a href="{% url 'plan:login' %}">Login</a>
+                        </p>
+                    {% endif %}
+                    <? } ?>
+				</div>
+            </div>
+        </nav>
+    </div>
+    {% endblock header %}
+    {% block content %}<div ui-view></div>{% endblock content %}
+    {% block footer %}{% endblock footer %}
+</body>
+</html>

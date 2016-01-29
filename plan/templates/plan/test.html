@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>(A)Plann'd it</title>
+    <link rel="shortcut icon" href="http://maxoptra.com/wp-content/uploads/2013/10/maxoptra_text_img.png">
+
+    <script type="text/javascript" src='{% static 'angular/angular.js' %}'></script>
+    <script type="text/javascript" src='{% static 'leaflet/dist/leaflet.js' %}'></script>
+    <script type="text/javascript" src='{% static 'angular-leaflet-directive/dist/angular-leaflet-directive.js' %}'></script>
+
+    <script type="text/javascript" src='{% static 'plan/properties.js' %}'></script>
+    <script>
+        angular.module('Planndit', ['leaflet-directive'])
+    </script>
+    <script type="text/javascript" src='{% static 'plan/map/map.controller.js' %}'></script>
+
+    <link rel="stylesheet" type="text/css" href='{% static 'leaflet/dist/leaflet.css' %}'>
+</head>
+<body ng-app="Planndit">
+        <div ng-controller="MapController">
+            <leaflet id = "map" height="480px" width="100%" center="center" paths="paths" markers="markers" bounds="bounds"></leaflet>
+        </div>
+</body>
+</html>

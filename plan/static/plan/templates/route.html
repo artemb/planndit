@@ -1,0 +1,117 @@
+<div class="container" ng-controller="RouteController as vm" >
+    <div class="row">
+        <div class="col-md-6 toolbar">
+            <div role="group" class="btn-group" aria-label="...">
+                <button id="addAddress" class="btn btn-default" ng-click="addAddress()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add addresses
+                </button>
+                <button ng-click="resequence()" id="send" type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon glyphicon-refresh"></span>
+                    Optimise
+                </button>
+                <button ng-click="sendRoute()" id="send" type="submit" class="btn btn-default" disabled="true">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                    Send to Webfleet
+                </button>
+                <button ng-click="print()" id="send" type="submit" class="btn btn-default" disabled="true">
+                    <span class="glyphicon glyphicon-print"></span>
+                    Print
+                </button>
+            </div>
+        </div>
+        <div class="col-md-2" style="padding-right: 5px">
+            <div class="input-group">
+                <span class = "input-group-addon">Name</span>
+                <input type="text" class="form-control" ng-model="route.name"/>
+            </div>
+        </div>
+        <div class="col-md-2" style="padding-left: 0px; padding-right: 0px">
+            <div class="input-group">
+                <span class = "input-group-addon">Date</span>
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="route.date"
+                       is-open="status.opened" ng-required="true" close-text="Close" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+
+        <div class="col-md-2" style="padding-right: 5px">
+            <div class="input-group">
+                <span class = "input-group-addon">Vehicle</span>
+                <div class="btn-group" uib-dropdown>
+                    <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle>
+                        {{ route.vehicle.name }} <span class="caret"></span>
+                    </button>
+                    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                        <li role="menuitem" ng-repeat="vehicle in vehicles">
+                            <a ng-click="select(vehicle)" href="#">{{ vehicle.name }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <uib-tabset >
+                <uib-tab heading="Your route">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>#</th>
+                                <th>Reference</th>
+                                <th>Address</th>
+                                <th>Distance</th>
+                                <th>Duration</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ui-sortable="sortableOptions" ng-model="route.orders">
+                            <tr ng-repeat="order in route.orders" ng-class="{'sortable':!($last || $first)}">
+                                <td><span class="glyphicon glyphicon-option-vertical handler" ng-hide="$last || $first"></span></td>
+                                <td><span>{{ order.order }}</span></td>
+                                <td>{{ order.reference }}</td>
+                                <td>{{ order.location.address }}</td>
+                                <td>{{ order.distance }}</td>
+                                <td>{{ order.duration }}</td>
+                                <td>
+                                    <span class="glyphicon glyphicon-pencil btn btn-xs" ng-click="edit(order.id)"></span>
+                                    <span class="glyphicon glyphicon-remove btn btn-xs" ng-click="remove(order)" ng-hide="$last || $first"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </uib-tab>
+                <uib-tab heading="Unrecognized addresses ({{route.invalid_orders.length}})">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>#</th>
+                                <th>Reference</th>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr ng-repeat="order in route.invalid_orders">
+                                <td>{{ $index + 1 }} </td>
+                                <td>{{ order.reference }}</td>
+                                <td>{{ order.location.address }}</td>
+                                <td>
+                                    <span class="glyphicon glyphicon-pencil btn btn-xs" ng-click="edit(order.id)"></span>
+                                    <span class="glyphicon glyphicon-remove btn btn-xs" ng-click="remove(order)"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+        <div class="col-md-6">
+            <div ng-controller="MapController">
+                <leaflet id = "map" height="480px" width="100%" center="center" paths="paths" markers="markers" bounds="bounds"></leaflet>
+            </div>
+        </div>
+    </div>
+</div>

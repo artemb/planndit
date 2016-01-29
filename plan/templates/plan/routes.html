@@ -1,0 +1,45 @@
+{% extends 'plan/base.html' %}
+{% block content %}
+{% verbatim %}
+    <div class="container" ng-controller="RouteListController as vm">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    <!--<Route date: <input ng-bind="date" class="form-control" style="width: auto; display: -webkit-inline-flex;"
+                        type="date" id="planningDate" name="input" value="{{ date|date:'yyyy-MM-dd' }}"
+                        placeholder="yyyy-MM-dd" required />-->
+                    <div class="col-md-6">
+                        <p class="input-group">
+                          <input type="text" class="form-control" uib-datepicker-popup ng-model="date"
+                                 is-open="status.opened" ng-required="true" close-text="Close" />
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                        </p>
+                    </div>
+                </div>
+            {{ date }}
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Route number</th>
+                            <th>Vehicle</th>
+                            <th>Number of orders</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr ng-repeat="route in routes">
+                            <td>#{{ route.id }}</td>
+                            <td>{{ route.vehicle.name }}</td>
+                            <td>{{ route.orders.length }}</td>
+                            <td>{{ route.id }}</td>
+                            <td><span class="glyphicon glyphicon-pencil btn btn-xs" ng-click="edit(route.id)"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button ng-click="createRoute()" id="create" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span>Create route</button>
+            </div>
+        </div>
+    </div>
+{% endverbatim %}
+{% endblock content %}

@@ -1,0 +1,17 @@
+.toolbar {
+	margin-bottom: 10px;
+}
+
+.handler {
+	cursor: move;
+}
+
+.order-number {
+	color: #ffffff !important;
+	background: none !important;
+	border-color: rgba(0,0,0,0);
+}
+
+.leaflet-label-right:before, .leaflet-label-left:after {
+	content: normal !important;
+}
