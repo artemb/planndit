@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 
 from plan.api.views import RouteViewset, order_import, OrderViewset, OrderItemViewset, geocode, VehicleViewset, \
-    update_route_vehicle, update_route_orders, resequence, remove_route_order
+    update_route_vehicle, update_route_orders, resequence, remove_route_order, send
 
 route_urls = [
     url(r'^$', RouteViewset.as_view({'post': 'list'}), name='route-list'),
@@ -11,6 +11,7 @@ route_urls = [
     url(r'^update_orders', update_route_orders, name='route-update-orders'),
     url(r'^remove_order', remove_route_order, name='route-update-orders'),
     url(r'^resequence', resequence, name='route-update-orders'),
+    url(r'^send', send, name='route-send'),
 ]
 
 order_urls = [

@@ -5,7 +5,7 @@ import csv
 from plan.models import Vehicle, Route
 
 logger = logging.getLogger('planndit.externals.vehicles')
-webfleet = 'https://csv.business.tomtom.com/extern'
+webfleet_url = 'https://csv.business.tomtom.com/extern'
 
 
 def vehicle_sync(user):
@@ -56,36 +56,42 @@ def vehicle_sync(user):
     return object_update
 
 
-def send_orders(route_id, account_id):
-    route = Route.objects.filter(account_id=account_id, id=route_id)
+def send_orders(account, route_id):
+    route = Route.objects.filter(account=account, id=route_id)
     if route.count() != 1:
         return
     route = route[0]
-    def convert_coordinates(coordinate):
-        return round(coordinate * 1000000)
 
-    for order in route.orders.all():
-        description = ""
+    orders = route.orders.filter(location__is_valid=True).all()
+    for number, order in enumerate(orders):
+        if number == 0 or number == len(orders):
+            continue
+        description = "#{number} {description}".format(number=number, description=order.commentary)
+        for item in order.orderitem_set.all():
+            description += "\n{key}: {value}".format(key=item.key, value=item.value)
         data = {
             'objectno': route.vehicle.external_id,
             'orderid': order.id,
             'ordertext': description,
             'ordertype': 3,
-            'longitude': 1,
-            'latitude': 1,
-            'city': 'None',
-            'zip': 'None',
-            'orderdate': route.date,  # todo format
+            'longitude': round(order.location.longitude * 1000000),
+            'latitude': round(order.location.latitude * 1000000),
+            'city': order.location.city,
+            'zip': order.location.postcode,
+            'orderdate': route.date.strftime("%d/%m/%y") + "'TZ",  # todo format
         }
+        webfleet_request(account, 'sendDestinationOrderExtern', data)
+    route.status = 'SEND'
+    route.save()
 
 
-def webfleet_request(user, action, params=None):
+def webfleet_request(account, action, params=None):
     if not params:
         params = {}
-    params.update(get_auth(user))
+    params.update(get_auth(account))
     params['lang'] = 'en'
     params['action'] = action
-    result = requests.get(webfleet, params)
+    result = requests.get(webfleet_url, params)
     reader = parse_csv(result.text)
     return reader  # for row in reader: row['col_name']
 
@@ -96,11 +102,11 @@ def parse_csv(response):
     return reader
 
 
-def get_auth(user):
+def get_auth(account):
     return {
-        'account': user.account.webfleet_account,
-        'username': user.account.webfleet_username,
-        'password': user.account.webfleet_password,
+        'account': account.webfleet_account,
+        'username': account.webfleet_username,
+        'password': account.webfleet_password,
     }
 
 

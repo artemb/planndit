@@ -10,7 +10,7 @@
                     <span class="glyphicon glyphicon glyphicon-refresh"></span>
                     Optimise
                 </button>
-                <button ng-click="sendRoute()" id="send" type="submit" class="btn btn-default" disabled="true">
+                <button ng-click="sendRoute()" id="send" type="submit" class="btn btn-default">
                     <span class="glyphicon glyphicon-chevron-right"></span>
                     Send to Webfleet
                 </button>
@@ -75,8 +75,14 @@
                                 <td><span>{{ order.order }}</span></td>
                                 <td>{{ order.reference }}</td>
                                 <td>{{ order.location.address }}</td>
-                                <td>{{ order.distance }}</td>
-                                <td>{{ order.duration }}</td>
+                                <td>
+                                    <span ng-hide="$first">{{ order.distance }}</span>
+                                    <span ng-hide="!$first">-</span>
+                                </td>
+                                <td>
+                                    <span ng-hide="$first">{{ order.duration }}</span>
+                                    <span ng-hide="!$first">-</span>
+                                </td>
                                 <td>
                                     <span class="glyphicon glyphicon-pencil btn btn-xs" ng-click="edit(order.id)"></span>
                                     <span class="glyphicon glyphicon-remove btn btn-xs" ng-click="remove(order)" ng-hide="$last || $first"></span>

@@ -23,6 +23,9 @@
                 $scope.addAddress = function() {
                     $state.go('addAddresses', {id: $stateParams.id});
                 };
+                $scope.sendRoute = function() {
+                    routeService.sendRoute($stateParams.id)
+                };
 
                 $scope.edit = function(id) {
                     $state.go('orderEdit', {
@@ -42,18 +45,7 @@
                 $scope.remove = function(order) {
                     routeService.removeOrder($stateParams.id, order.id).then(function(response) {
                         if (response.data.success) {
-                            var index = $scope.route.orders.indexOf(order);
-                            if (index >= 0) {
-                                $scope.route.orders.splice(index, 1);
-                                for (var i = 0; i < $scope.route.orders.length; i++) {
-                                    $scope.route.orders[i].order = i;
-                                }
-                            } else {
-                                index = $scope.route.invalid_orders.indexOf(order);
-                                if (index >= 0) {
-                                    $scope.route.invalid_orders.splice(index, 1);
-                                }
-                            }
+                            $scope.route = routeService.getCurrentRoute();
                         }
                     })
                 };
@@ -89,7 +81,9 @@
                                 $scope.route.orders[i].order = i;
                                 orders[$scope.route.orders[i].id] = $scope.route.orders[i].order;
                             }
-                            routeService.updateOrders($stateParams.id, orders);
+                            routeService.updateOrders($stateParams.id, orders).then(function() {
+                                $scope.route = routeService.getCurrentRoute();
+                            });
                         }
                     },
                     update: function(e, ui) {

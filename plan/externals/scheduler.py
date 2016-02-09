@@ -1,6 +1,7 @@
 import requests
 import json
 
+from plan.externals import routing
 from plan.models import Route
 
 scheduler_url = 'http://scheduler.maxoptra.com/rest/scheduler-api/v1/resequence'
@@ -55,4 +56,5 @@ def resequence(route_id, account_id):
                         order.order = number + 1
                         order.save()
                         break
+    routing.calculate_distance(route)
     return route

@@ -57,6 +57,12 @@
                         orders: orders
                     });
 
+                    promise.then(function(response){
+                        if (response.data.success) {
+                            route = response.data.route;
+                        }
+                    });
+
                     return promise;
                 },
 
@@ -75,6 +81,12 @@
                         orderId: orderId
                     });
 
+                    promise.then(function(response){
+                        if (response.data.success) {
+                            route = response.data.route;
+                        }
+                    });
+
                     return promise;
                 },
 
@@ -85,6 +97,14 @@
 
                     promise.then(function(response) {
                         route = response.data;
+                    });
+
+                    return promise;
+                },
+
+                sendRoute: function(routeId) {
+                    var promise = $http.post(apiUrl + 'route/send/', {
+                        routeId: routeId
                     });
 
                     return promise;

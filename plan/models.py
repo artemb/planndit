@@ -15,6 +15,8 @@ class Account(models.Model):
 
 class Location(models.Model):
     address = models.CharField(max_length=255)
+    city = models.CharField(max_length=255, default='')
+    postcode = models.CharField(max_length=255, default='')
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     is_valid = models.BooleanField(default=True)
@@ -65,3 +67,12 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order)
     key = models.CharField(max_length=32)
     value = models.CharField(max_length=255)
+
+
+class LocationCache(models.Model):
+    from_latitude = models.FloatField(null=False)
+    from_longitude = models.FloatField(null=False)
+    to_latitude = models.FloatField(null=False)
+    to_longitude = models.FloatField(null=False)
+    distance = models.IntegerField(default=0)
+    duration = models.IntegerField(default=0)
