@@ -52,7 +52,7 @@ class Order(models.Model):
     order = models.IntegerField(default=0)
     route = models.ForeignKey(Route, related_name='orders')
     reference = models.CharField(max_length=32)
-    commentary = models.CharField(max_length=255)
+    commentary = models.CharField(max_length=255, blank=True)
     distance = models.IntegerField(default=0)
     duration = models.IntegerField(default=0)
 
