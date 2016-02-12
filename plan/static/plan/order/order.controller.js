@@ -36,6 +36,7 @@
                     self.timeout = setTimeout(function() {
                         gisService.geocode(address).then(function(response) {
                             $scope.order.location = response.data;
+                            $scope.$broadcast('showOrder', $scope.order);
                             $scope.loading = false;
                             delete self.timeout;
                         })

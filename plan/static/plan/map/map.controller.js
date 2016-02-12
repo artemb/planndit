@@ -130,7 +130,15 @@
 					$scope.markers = {};
 					$scope.paths.path.latlngs = [];
 					if (order.location.is_valid) {
-						self.addMarker(order, true)
+					    var bounds = new L.LatLngBounds();
+						self.addOrderMarker(order, true)
+                        var lat = parseFloat(order.location.latitude);
+						var lng = parseFloat(order.location.longitude);
+						bounds.extend(L.latLng(lat, lng));
+                        $scope.bounds = {
+                            southWest: bounds.getSouthWest(),
+                            northEast: bounds.getNorthEast()
+                        };
 					}
 				};
 				$scope.$on('routeUpdate', function(event, data) {
