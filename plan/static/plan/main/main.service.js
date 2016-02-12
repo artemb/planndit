@@ -7,12 +7,29 @@
     'use strict';
 
     angular.module('Planndit')
-        .factory('mainService', function() {
-            var order;
-
+        .factory('mainService', function($http) {
+            var currentUser = '';
             return {
-                getOrder: function() {
-                    return order;
+                checkUser: function() {
+                    var promise = $http.post(apiUrl + 'auth/check/');
+
+                    var thiz = this;
+
+                    promise.then(function(response) {
+                        if (response.data.success) {
+                            thiz.setUser(response.data.message);
+                        }
+                    });
+
+                    return promise
+                },
+
+                getUser: function() {
+                    return currentUser;
+                },
+
+                setUser: function(username) {
+                    currentUser = username;
                 }
             }
         })

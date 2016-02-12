@@ -52,7 +52,7 @@
 
                 $scope.resequence = function() {
                     routeService.resequence($stateParams.id).then(function() {
-                        $scope.route = routeService.getCurrentRoute()
+                        $scope.route = routeService.getCurrentRoute();
                         $scope.$broadcast('routeUpdate');
                     })
                 };

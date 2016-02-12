@@ -22,10 +22,11 @@
 
                     }
                 }).state('login', {
-                    url: '/login',
-                    onEnter: function() {
-                        $state.reload();
-                    }
+                    url: '/login/',
+                    templateUrl: templatePath + 'login.html'
+                }).state('register', {
+                    url: '/register/',
+                    templateUrl: templatePath + 'register.html'
                 }).state('routeList', {
                     url: '/routes/',
                     templateUrl: templatePath + 'routes.html'

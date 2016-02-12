@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from plan.externals import routing
 from plan.models import Route, Vehicle, Order, Location, OrderItem
 
@@ -87,13 +86,13 @@ class OrderSerializer(serializers.ModelSerializer):
 
         instance.save()
 
-        #delete
+        # delete
         orderitem_ids = [item['id'] for item in validated_data['orderitem_set']]
         for item in instance.orderitem_set.all():
             if item.id not in orderitem_ids:
                 item.delete()
 
-        #create or update
+        # create or update
         for item in validated_data['orderitem_set']:
             OrderItem(id=item['id'], key=item['key'], value=item['value'], order=instance).save()
 
