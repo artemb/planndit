@@ -18,7 +18,7 @@
 
                 $scope.createRoute = function() {
                     routeService.createRoute($scope.date).then(function(response) {
-                        $scope.routes.push(response.data);
+                        $state.go('route', {id: response.data.id})
                     })
                 };
 
