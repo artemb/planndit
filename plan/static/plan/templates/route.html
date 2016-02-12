@@ -68,27 +68,45 @@
                                 <th>Duration</th>
                                 <th>Action</th>
                             </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Start location</td>
+                                <td>{{ route.start_location.address }}</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>
+                                    <span class="glyphicon glyphicon-pencil btn btn-xs" ng-click="edit(order.id)"></span>
+                                </td>
+                            </tr>
                         </thead>
                         <tbody ui-sortable="sortableOptions" ng-model="route.orders">
-                            <tr ng-repeat="order in route.orders" ng-class="{'sortable':!($last || $first)}">
-                                <td><span class="glyphicon glyphicon-option-vertical handler" ng-hide="$last || $first"></span></td>
+                            <tr ng-repeat="order in route.orders" class="sortable">
+                                <td><span class="glyphicon glyphicon-option-vertical handler"></span></td>
                                 <td><span>{{ order.order }}</span></td>
                                 <td>{{ order.reference }}</td>
                                 <td>{{ order.location.address }}</td>
-                                <td>
-                                    <span ng-hide="$first">{{ order.distance }}</span>
-                                    <span ng-hide="!$first">-</span>
-                                </td>
-                                <td>
-                                    <span ng-hide="$first">{{ order.duration }}</span>
-                                    <span ng-hide="!$first">-</span>
-                                </td>
+                                <td>{{ order.distance }}</td>
+                                <td>{{ order.duration }}</td>
                                 <td>
                                     <span class="glyphicon glyphicon-pencil btn btn-xs" ng-click="edit(order.id)"></span>
-                                    <span class="glyphicon glyphicon-remove btn btn-xs" ng-click="remove(order)" ng-hide="$last || $first"></span>
+                                    <span class="glyphicon glyphicon-remove btn btn-xs" ng-click="remove(order)"></span>
                                 </td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>End location</td>
+                                <td>{{ route.end_location.address }}</td>
+                                <td>{{ route.distance }}</td>
+                                <td>{{ route.duration }}</td>
+                                <td>
+                                    <span class="glyphicon glyphicon-pencil btn btn-xs" ng-click="edit(order.id)"></span>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </uib-tab>
                 <uib-tab heading="Unrecognized addresses ({{route.invalid_orders.length}})">

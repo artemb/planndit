@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
-from plan.api.data import Record
+from plan.api.data import Record, RouteRecord
 from plan.api.serializers import RouteSerializer, LocationSerializer
 from plan.externals import gis, scheduler, routing, webfleet
 from plan.models import Route, Order, OrderItem, Vehicle
@@ -97,30 +97,25 @@ def order_import(request):
             if key is None or value is None:
                 continue
             OrderItem.objects.create(order=order_model, key=key, value=value)
-        return location.is_valid
+        return True
 
     route_id = request.data.get('routeId')
     orders = request.data.get('orders')
 
     route = Route.objects.filter(id=route_id, account=request.user.account)
     if route.count() != 1:
-        return Response({'success': False, 'message': 'Route not found'})
+        return Response(Record.serialize(False, 'Route not found'))
     route = route[0]
 
-    current_orders = route.orders.filter(location__is_valid=True).order_by('order')
-    number = current_orders.count() - 1
-    last_order = current_orders.last()
+    number = route.orders.count() + 1
 
     for row in orders:
         if process_order(row, route_id, number):
             number += 1
 
-    last_order.order = number
-    last_order.save()
-
     routing.calculate_distance(route)
 
-    return Response()
+    return Response(Record.serialize(True))
 
 
 @api_view(['POST'])
@@ -129,14 +124,14 @@ def update_route_vehicle(request):
     vehicle_id = request.data.get('vehicleId')
     vehicle = Vehicle.objects.filter(account=request.user.account, id=vehicle_id)  # todo make until date check
     if vehicle.count() != 1:
-        return Response({'success': False, 'message': 'Vehicle not found'})
+        return Response(Record.serialize(False, 'Vehicle not found'))
     route = Route.objects.filter(account=request.user.account, id=route_id)
     if route.count() != 1:
-        return Response({'success': False, 'message': 'Route not found'})
+        return Response(Record.serialize(False, 'Route not found'))
     route = route[0]
     route.vehicle_id = vehicle[0].id
     route.save()
-    return Response({'success': True})
+    return Response(Record.serialize(True))
 
 
 @api_view(['POST'])
@@ -145,19 +140,19 @@ def update_route_orders(request):
     orders = request.data.get('orders')
     route = Route.objects.filter(account=request.user.account, id=route_id)
     if route.count() != 1:
-        return Response({'success': False, 'message': 'Route not found'})
+        return Response(Record.serialize(False, 'Route not found'))
     route = route[0]
     route_orders = route.orders.filter(location__is_valid=True)
     for route_order in route_orders:  # check orders
         order_number = orders.get(str(route_order.id), None)
         if order_number is None:
-            return Response({'success': True, 'message': 'Missing order in request: {id}'.format(id=route_order.id)})
+            return Response(Record.serialize(True, 'Missing order in request: {id}'.format(id=route_order.id)))
     for route_order in route_orders:
         order_number = orders.get(str(route_order.id))
         route_order.order = order_number
         route_order.save()
     routing.calculate_distance(route)  # todo optimize
-    return Response({'success': True, 'route': RouteSerializer(route).data})
+    return Response(RouteRecord.serialize(True, route))
 
 
 @api_view(['POST'])
@@ -175,9 +170,9 @@ def remove_route_order(request):
     if order.location.is_valid:
         deleted = order.delete()
         if deleted:
-            route_orders = route.orders.filter(location__is_valid=True)
+            route_orders = route.orders.all()
             for number, route_order in enumerate(route_orders):
-                route_order.order = number
+                route_order.order = number + 1
                 route_order.save()
         else:
             return Response({'success': False, 'message': 'Order cant be deleted'})

@@ -37,9 +37,11 @@ class Vehicle(models.Model):
 
 class Route(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, verbose_name='ID')
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, blank=True)
     account = models.ForeignKey(Account)
     vehicle = models.ForeignKey(Vehicle, null=True)
+    start_location = models.ForeignKey(Location, related_name='start_location')
+    end_location = models.ForeignKey(Location, related_name='end_location')
     created = models.DateField(auto_now_add=True)
     distance = models.IntegerField(default=0)
     duration = models.IntegerField(default=0)

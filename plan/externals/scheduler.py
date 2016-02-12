@@ -18,29 +18,27 @@ def resequence(route_id, account_id):
         'account': {
             'accountId': scheduler_account
         },
+        'start': {
+            'latitude': route.start_location.latitude,
+            'longitude': route.start_location.longitude,
+        },
+        'end': {
+            'latitude': route.end_location.latitude,
+            'longitude': route.end_location.longitude,
+        },
         'orders': [
 
         ]}
+
     orders = route.orders.filter(location__is_valid=True)
     for order in orders:
-        if order.order == 0:
-            data['start'] = {
+        data['orders'].append({
+            'uid': order.id,
+            'location': {
                 'latitude': order.location.latitude,
                 'longitude': order.location.longitude,
             }
-        elif order.order == orders.count() - 1:
-            data['end'] = {
-                'latitude': order.location.latitude,
-                'longitude': order.location.longitude,
-            }
-        else:
-            data['orders'].append({
-                'uid': order.id,
-                'location': {
-                    'latitude': order.location.latitude,
-                    'longitude': order.location.longitude,
-                }
-            })
+        })
     params = {
         'headers': {
             'Content-Type': 'application/json'

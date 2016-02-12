@@ -46,6 +46,7 @@
                     routeService.removeOrder($stateParams.id, order.id).then(function(response) {
                         if (response.data.success) {
                             $scope.route = routeService.getCurrentRoute();
+                            $scope.$broadcast('routeUpdate');
                         }
                     })
                 };
@@ -78,11 +79,12 @@
                         if (this.isUpdate) {
                             var orders = {};
                             for (var i = 0; i < $scope.route.orders.length; i++) {
-                                $scope.route.orders[i].order = i;
+                                $scope.route.orders[i].order = i + 1;
                                 orders[$scope.route.orders[i].id] = $scope.route.orders[i].order;
                             }
                             routeService.updateOrders($stateParams.id, orders).then(function() {
                                 $scope.route = routeService.getCurrentRoute();
+                                $scope.$broadcast('routeUpdate');
                             });
                         }
                     },

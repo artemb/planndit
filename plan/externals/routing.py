@@ -8,25 +8,46 @@ router = 'https://router.project-osrm.org/{action}'
 
 
 def calculate_distance(route):
-    request_router(route.orders.filter(location__is_valid=True).all())
+    request_router(route)
 
 
-def request_router(orders):
+def request_router(route):
+    orders = route.orders.filter(location__is_valid=True)
     previous = None
+
+    # first
+    first_order = orders.first()
+    distance, duration = process_location(route.start_location, first_order.location)
+    first_order.distance = distance
+    first_order.duration = duration
+    first_order.save()
+    # orders
     for order in orders:
         if previous is None:
             previous = order
             continue
-        distance = 0
-        duration = 0
-        if previous.location.latitude != order.location.latitude or previous.location.longitude == order.location.longitude:
-            cache = get_location_cache(previous.location, order.location)
-            distance = cache.distance
-            duration = cache.duration
+        distance, duration = process_location(previous.location, order.location)
         order.distance = distance
         order.duration = duration
         order.save()
         previous = order
+
+    # last
+    last_order = orders.last()
+    distance, duration = process_location(last_order.location, route.end_location)
+    route.distance = distance
+    route.duration = duration
+    route.save()
+
+
+def process_location(location_from, location_to):
+    distance = 0
+    duration = 0
+    if location_from.latitude != location_to.latitude or location_from.longitude == location_to.longitude:
+            cache = get_location_cache(location_from, location_to)
+            distance = cache.distance
+            duration = cache.duration
+    return distance, duration
 
 
 def get_location_cache(location_from, location_to):
@@ -64,5 +85,5 @@ def request_viaroute(location_from, location_to):
 def parse_response(response):
     summary = response['route_summary']
     distance = summary.get('total_distance', 0)
-    duration = summary.get('total_distance', 0)
+    duration = summary.get('total_time', 0)
     return distance, duration

@@ -33,7 +33,7 @@
 					self.showRoute(self.route);
 				};
 
-				self.addMarker = function(order, draggable) {
+				self.addOrderMarker = function(order, draggable) {
 					var marker = {
 						lat: parseFloat(order.location.latitude),
 						lng: parseFloat(order.location.longitude),
@@ -56,22 +56,70 @@
 					$scope.markers[order.id + '_' + order.order] = marker;
 				};
 
+				self.addLocationMarker = function(location, label) {
+					var locationKey = 'location_' + location.id;
+					if ($scope.markers.hasOwnProperty(locationKey)) {
+						return
+					}
+					var marker = {
+						lat: parseFloat(location.latitude),
+						lng: parseFloat(location.longitude),
+						draggable: false,
+						icon: {
+							iconUrl: imagePath + "map-marker-3.png",
+							iconSize: [30, 40],
+							iconAnchor: [15, 40]
+						},
+						label: {
+							message: label,
+							options: {
+								noHide: true,
+								offset: [-13, -41],
+								className: 'order-number'
+							}
+						}
+					};
+					$scope.markers[locationKey] = marker;
+				};
+
 				self.showRoute = function(route) {
 					$scope.markers = {};
 					$scope.paths.path.latlngs = [];
 					var bounds = new L.LatLngBounds();
+
+					//start
+					self.addLocationMarker(route.start_location, 'S');
+					var lat = parseFloat(route.start_location.latitude);
+					var lng = parseFloat(route.start_location.longitude);
+					var path = {
+						lat: lat,
+						lng: lng
+					};
+					bounds.extend(L.latLng(lat, lng));
+					$scope.paths.path.latlngs.push(path);
+					//orders
 					for (var i = 0; i < route.orders.length; i++) {
 						var order = route.orders[i];
-						self.addMarker(order, false);
-						var lat = parseFloat(order.location.latitude);
-						var lng = parseFloat(order.location.longitude);
-						var path = {
+						self.addOrderMarker(order, false);
+						lat = parseFloat(order.location.latitude);
+						lng = parseFloat(order.location.longitude);
+						path = {
 							lat: lat,
 							lng: lng
 						};
 						bounds.extend(L.latLng(lat, lng));
 						$scope.paths.path.latlngs.push(path);
 					}
+					//end
+					self.addLocationMarker(route.end_location, 'E');
+					lat = parseFloat(route.end_location.latitude);
+					lng = parseFloat(route.end_location.longitude);
+					path = {
+						lat: lat,
+						lng: lng
+					};
+					bounds.extend(L.latLng(lat, lng));
+					$scope.paths.path.latlngs.push(path);
 					$scope.bounds = {
 						southWest: bounds.getSouthWest(),
 						northEast: bounds.getNorthEast()

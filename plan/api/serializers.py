@@ -53,34 +53,14 @@ class OrderSerializer(serializers.ModelSerializer):
         minutes, seconds = divmod(order.duration, 60)
         hours, minutes = divmod(minutes, 60)
         return '{:02d}:{:02d}'.format(hours, minutes)
-        # if hours > 0:
-        #     return '{:d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
-        # else:
-        #     return '{:02d}:{:02d}'.format(minutes, seconds)
 
     def update(self, instance, validated_data):
         instance.reference = validated_data.get('reference', instance.reference)
         instance.commentary = validated_data.get('commentary', instance.reference)
         location = validated_data.get('location', instance.reference)
-        old_valid = instance.location.is_valid
         old_location = instance.location.id
         instance.location = Location.objects.filter(id=location['id'])[0]
-        now_valid = instance.location.is_valid
         now_location = instance.location.id
-        if old_valid != now_valid:
-            if now_valid:
-                orders = instance.route.orders.filter(location__is_valid=True)
-                number = orders.count() - 1
-                order = orders.last()
-                order.order += 1
-                order.save()
-                instance.order = number
-            else:
-                instance.order = 0
-                orders = instance.route.orders.filter(location__is_valid=True)
-                order = orders.last()
-                order.order -= 1
-                order.save()
         if old_location != now_location:
             routing.calculate_distance(instance.route)
 
@@ -108,6 +88,23 @@ class RouteSerializer(serializers.ModelSerializer):
     invalid_orders = serializers.SerializerMethodField()
     vehicle = VehicleSerializer(read_only=True)
     status = serializers.StringRelatedField()
+    start_location = LocationSerializer(read_only=True)
+    end_location = LocationSerializer(read_only=True)
+    distance = serializers.SerializerMethodField()
+    duration = serializers.SerializerMethodField()
+
+    def get_distance(self, route):
+        if route.distance is None:
+            return '0mi'
+        miles = route.distance * 0.000621371192
+        return '{:.2f}mi'.format(miles)
+
+    def get_duration(self, route):
+        if route.duration is None:
+            return
+        minutes, seconds = divmod(route.duration, 60)
+        hours, minutes = divmod(minutes, 60)
+        return '{:02d}:{:02d}'.format(hours, minutes)
 
     def get_invalid_orders(self, obj):
         ser = OrderSerializer(many=True, read_only=True)
@@ -118,14 +115,18 @@ class RouteSerializer(serializers.ModelSerializer):
         return ser.to_representation(obj.orders.filter(location__is_valid=True))
 
     def create(self, validated_data):
+        validated_data['vehicle'] = Vehicle.objects.all()[0]  # todo with until date check
+        location = validated_data['vehicle'].location
+
+        validated_data['start_location'] = location
+        validated_data['end_location'] = location
         route = Route.objects.create(**validated_data)
-        route.vehicle = Vehicle.objects.all()[0]  # todo with until date check
-        location = route.vehicle.location
-        Order.objects.create(reference='Vehicle location', location=location, route=route, order=0)
-        Order.objects.create(reference='Vehicle location', location=location, route=route, order=1)
+        route.name = '#' + str(route.id)
         route.save()
         return route
 
     class Meta:
         model = Route
-        fields = ('id', 'orders', 'invalid_orders', 'vehicle', 'date', 'status')
+        fields = (
+            'id', 'name', 'orders', 'invalid_orders', 'start_location', 'end_location', 'vehicle', 'date', 'status',
+            'distance', 'duration')
