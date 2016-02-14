@@ -64,8 +64,6 @@ def send_orders(account, route_id):
 
     orders = route.orders.filter(location__is_valid=True).all()
     for number, order in enumerate(orders):
-        if number == 0 or number == len(orders):
-            continue
         description = "#{number} {description}".format(number=number, description=order.commentary)
         for item in order.orderitem_set.all():
             description += "\n{key}: {value}".format(key=item.key, value=item.value)
