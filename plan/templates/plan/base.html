@@ -38,10 +38,12 @@
     <script type="text/javascript" src='{% static 'plan/gis/gis.service.js' %}'></script>
     <script type="text/javascript" src='{% static 'plan/vehicle/vehicle.service.js' %}'></script>
 
-    <link rel="stylesheet" type="text/css" href='{% static 'plan/style.css' %}'>
     <link rel="stylesheet" type="text/css" href='{% static 'bootstrap/dist/css/bootstrap.css' %}'>
     <link rel="stylesheet" type="text/css" href='{% static 'leaflet/dist/leaflet.css' %}'>
     <link rel="stylesheet" type="text/css" href='{% static 'Leaflet.label/dist/leaflet.label.css' %}'>
+    
+    <link rel="stylesheet" type="text/css" href='{% static 'plan/style.css' %}'>
+    <link rel="stylesheet" type="text/css" href='{% static 'plan/css/planndit-home.css' %}'>
 </head>
 <body ng-app="Planndit" ng-controller="MainController">
     {% block header %}
@@ -81,7 +83,59 @@
         </nav>
     </div>
     {% endblock header %}
-    {% block content %}<div ui-view></div>{% endblock content %}
+    {% block content %}
+
+    <div class="container">
+
+      <div class="header page-header">
+        <div class="login">
+          <p>Already a customer? <a href="#">Log in here</a></p>
+        </div>
+        <div class="logo">
+          <img src="{% static 'plan/img/planndit_logo_orange.png' %}">
+        </div>
+      </div>
+
+      <div class="title">
+        <h1>Put your route on a map</h1>
+        <h1>Optimise and send to TomTom Pro</h1>
+      </div>
+
+      <div class="workflow">
+        <div class="row">
+          <div class="col-md-3 workflow-step">
+            <span class="helper"></span>
+            <img src="{% static 'plan/img/Excel.png' %}" class="img-responsive" />
+          </div>
+          <div class="col-md-1 arrow">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+          </div>
+          <div class="col-md-4 workflow-step">
+            <span class="helper"></span>
+            <img src="{% static 'plan/img/route_map.png' %}" class="img-responsive"  />
+          </div>
+          <div class="col-md-1 arrow">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+          </div>
+          <div class="col-md-3 workflow-step">
+            <span class="helper"></span>
+            <img src="{% static 'plan/img/tomtom_pro.jpg' %}" class="img-responsive"  />
+          </div>
+        </div>
+      </div>
+
+      <div class="call-to-action">
+        <div class="button">
+          <a href="#" class="btn btn-success btn-lg">Try it now for free</a>
+        </div>
+        <div class="price lead">
+          <p>£5 / month per vehicle after a 14-day trial</p>
+        </div>
+      </div>
+
+    </div>
+
+    {% endblock content %}
     {% block footer %}{% endblock footer %}
 </body>
 </html>

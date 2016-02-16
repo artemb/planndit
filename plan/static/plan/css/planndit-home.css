@@ -1,0 +1,61 @@
+.container {
+	/*padding: 20px;*/
+	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+.login {
+	float: right;
+	line-height: 48px;
+	font-size: 18px;
+}
+
+.title {
+	/*padding-top: 50px;*/
+}
+
+.title h1 {
+	text-align: center;
+}
+
+.workflow {
+	margin-bottom: 30px;
+}
+
+.workflow div.workflow-step {
+	height: 345px;
+	white-space: nowrap;
+}
+
+.workflow .arrow {
+	vertical-align: middle;
+	line-height: 345px;
+	text-align: center;
+	color: #F7931E;
+	font-size: 40px;
+}
+
+.workflow-step .helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.workflow div.workflow-step img {
+	display: inline-block;
+	vertical-align: middle;
+	max-height: 345px;
+}
+
+.call-to-action {
+	text-align: center;
+}
+
+.call-to-action .button a {
+	font-size: 30px;
+}
+
+.call-to-action .price {
+	padding-top: 10px;
+	font-size: 20px;
+
+}
