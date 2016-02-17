@@ -1,13 +1,67 @@
-.container {
+body {
 	/*padding: 20px;*/
 	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
 }
 
+.header {
+	height: 60px;
+	color: white;
+	font-weight: bold;
+	font-size: 14px;
+	background-color: #F7931E;
+	line-height: 60px;
+	padding-right: 20px;
+}
+
+.header .logo {
+	padding-left: 30px;
+	padding-top: 15px;
+	height: 60px;
+	width: 130px;
+	float: left;
+}
+
+.header .logo img {
+	height: 25px;
+	vertical-align: top;
+}
+
 .login {
 	float: right;
-	line-height: 48px;
-	font-size: 18px;
 }
+
+.header a {
+	color: white;
+	text-decoration: underline;
+}
+
+	
+@media (max-width: 450px) {
+	.header {
+		height: 120px;
+	}
+
+	.header .logo {
+		float: none;
+		text-align: center;
+		margin: 0 auto;
+		padding-left: 0;
+		width: 250px;
+	}
+
+	.header .logo img {
+		/*max-height: 48px*/
+		/*max-width: 250px;*/
+		/*width: 100%;*/
+		height: auto;		
+	}
+
+	.header .login {
+		float: none;
+		text-align: center;
+	}
+}
+
 
 .title {
 	/*padding-top: 50px;*/
@@ -15,6 +69,10 @@
 
 .title h1 {
 	text-align: center;
+	font-weight: bold;
+	font-size: 26px;
+	color: #666666;
+	padding: 30px;
 }
 
 .workflow {
@@ -22,16 +80,24 @@
 }
 
 .workflow div.workflow-step {
-	height: 345px;
+	height: 288px;
 	white-space: nowrap;
+	text-align: center;
+	margin-bottom: 40px
+}
+
+.workflow-step p {
+	font-size: 16px;
+	padding-top: 20px;
 }
 
 .workflow .arrow {
 	vertical-align: middle;
-	line-height: 345px;
+	line-height: 288px;
 	text-align: center;
 	color: #F7931E;
 	font-size: 40px;
+	padding-bottom: 20px;
 }
 
 .workflow-step .helper {
@@ -40,10 +106,14 @@
     vertical-align: middle;
 }
 
+.workflow-step.middle img {
+	/*max-width: 80%;*/
+}
+
 .workflow div.workflow-step img {
 	display: inline-block;
 	vertical-align: middle;
-	max-height: 345px;
+	max-height: 288px;
 }
 
 .call-to-action {
@@ -51,11 +121,13 @@
 }
 
 .call-to-action .button a {
-	font-size: 30px;
+	font-size: 26px;
+	background-color: #4AC68A;
+	border-color: #4AC68A;
 }
 
 .call-to-action .price {
-	padding-top: 10px;
+	padding-top: 20px;
 	font-size: 20px;
 
 }
